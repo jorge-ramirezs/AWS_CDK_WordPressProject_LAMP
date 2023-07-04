@@ -2,6 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { aws_ec2 as ec2 } from "aws-cdk-lib";
 import { SubnetType } from "aws-cdk-lib/aws-ec2";
+import { readFileSync } from "fs";
 
 export class WordPressProjectStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -48,6 +49,9 @@ export class WordPressProjectStack extends cdk.Stack {
         generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
       }),
     });
+
+    const userDataScript = readFileSync('./lib/user-data.sh', 'utf-8');
+    ec2_instance.addUserData(userDataScript);
 
     new cdk.CfnOutput(this, 'Website URL', {value: ec2_instance.instancePublicDnsName});
   }
