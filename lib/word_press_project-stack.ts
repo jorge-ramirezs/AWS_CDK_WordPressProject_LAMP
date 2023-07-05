@@ -25,7 +25,7 @@ export class WordPressProjectStack extends cdk.Stack {
       ],
     });
 
-    const web_dmz = new ec2.SecurityGroup(this, "WebDMZ", {
+    const web_dmz = new ec2.SecurityGroup(this, "WP-WebDMZ", {
       vpc: wp_vpc,
       description: 'Allow ssh, http and https connections',
     });

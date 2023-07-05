@@ -15,22 +15,24 @@ sudo systemctl enable mariadb
 sudo systemctl start mariadb
 
 # Create user and database
-mysql -e "CREATE USER 'wordpress-user'@'localhost' IDENTIFIED BY '$sup3R$tr0ngPa$$';"
-mysql -e "CREATE DATABASE `wordpress-db`;"
-mysql -e "GRANT ALL PRIVILEGES ON `wordpress-db`.* TO "wordpress-user"@"localhost";"
-mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'R0otP4$$w0rD';"
-mysql -e "FLUSH PRIVILEGES;"
+mysql -u root -e 'CREATE USER "wordpress-user"@"localhost" IDENTIFIED BY "$sup3R$tr0ngPa$$";'
+mysql -u root -e 'CREATE DATABASE `wordpress-db`;'
+mysql -u root -e 'GRANT ALL PRIVILEGES ON `wordpress-db`.* TO "wordpress-user"@"localhost";'
+mysql -u root -e 'ALTER USER "root"@"localhost" IDENTIFIED BY "R0ot$up3RP4$$";'
 
 # Install WordPress
-wget https://wordpress.org/latest.tar.gz
-tar -xzf latest.tar.gz
-cp wordpress/wp-config-sample.php wordpress/wp-config.php
-sed -i 's/database_name_here/wordpress-db/' wordpress/wp-config.php
-sed -i 's/username_here/wordpress-user/' wordpress/wp-config.php
-sed -i 's/password_here/$sup3R$tr0ngPa$$/' wordpress/wp-config.php
+wget -P /tmp https://wordpress.org/latest.tar.gz
+tar -xzf /tmp/latest.tar.gz -C /tmp
+cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php
+sed -i 's/database_name_here/wordpress-db/' /tmp/wordpress/wp-config.php
+sed -i 's/username_here/wordpress-user/' /tmp/wordpress/wp-config.php
+sed -i 's/password_here/$sup3R$tr0ngPa$$/' /tmp/wordpress/wp-config.php
 
 # Install WP-CLI
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
+cd /tmp/wordpress/
 wp config shuffle-salts
+
+cp -r /tmp/wordpress/* /var/www/html/
